@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import fileDownload from "js-file-download";
 import axios from "axios";
 import { VideoPlayer } from "./components/video.player";
+import { UploadViode } from "./components/upload.video";
 
 function App() {
   const [isLoading, setLoading] = useState(false);
@@ -12,6 +13,18 @@ function App() {
   const [youtubeCompress, setYoutubeCompress] = useState(false);
   const [youtube, setYoutube] = useState(false);
 
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    const video = fetch("http://127.0.0.1:8000/api/v2/ziggy/getAllVideos", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+      setVideos(prev=>([...videos,result.videos]));
+      })
+      .catch((error) => console.log(error));
+  }, []);
   //let's handle the download
   async function handleDownload(event) {
     event.preventDefault();
@@ -103,10 +116,12 @@ function App() {
   //let's work on the frontend now
   return (
     <>
-<VideoPlayer/>
+      <VideoPlayer videos={videos} />
 
       <br />
+<UploadViode/>
 
+<br />
       <div align="center" className="container">
         <h1>Let's compress some UHD videos</h1>
         {youtube ? (
