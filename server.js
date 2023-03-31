@@ -5,7 +5,7 @@ const fileUpload = require("express-fileupload");
 const compressRoute = require("./routes/routes");
 const app = express();
 const port = process.env.PORT || 8000;
-
+const database = require("./config/DBconnect");
 //let's create cors option
 var corsOptions = {
     origin: 'http://localhost:3000',
@@ -17,6 +17,10 @@ app.use(cors());
 
 app.use(express.json());
 app.use(fileUpload());
+
+//let's connect to the database:
+database();
+
 app.use("/api/v2",compressRoute);
 
 //let's create our server
