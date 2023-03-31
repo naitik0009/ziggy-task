@@ -6,6 +6,8 @@ const compressRoute = require("./routes/routes");
 const app = express();
 const port = process.env.PORT || 8000;
 const database = require("./config/DBconnect");
+const path = require("path");
+
 //let's create cors option
 var corsOptions = {
     origin: 'http://localhost:3000',
@@ -13,10 +15,13 @@ var corsOptions = {
   }
 
 //let's use some middlewares
-app.use(cors());
-
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(fileUpload());
+
+//let's add the videos path
+app.use(express.static(path.join(__dirname,"/videos/ziggy")));
+console.log(path.join(__dirname,"public"));
 
 //let's connect to the database:
 database();

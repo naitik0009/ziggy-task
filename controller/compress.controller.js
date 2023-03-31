@@ -165,12 +165,10 @@ const youtubeDownloader = (request, response, next) => {
   const url = request.body.url;
   const filename = `${v4()}.mp4`;
   if (!url) {
-    return response
-      .status(404)
-      .json({
-        status: "error",
-        message: "please provide a valid youtube link",
-      });
+    return response.status(404).json({
+      status: "error",
+      message: "please provide a valid youtube link",
+    });
   }
 
   const result = youtubeMuxer(url)
@@ -221,15 +219,23 @@ const youtubeDownloader = (request, response, next) => {
 
 const getAllvideos = async (request, response, next) => {
   const videos = await videosModel.find({});
-  if (videos.length<=0) {
+
+  if (!videos.length > 0) {
+    
     return response
       .status(200)
-      .json({ status: "error", message: "no videos found upload a video first" });
+      .json({
+        status: "error",
+        message: "no videos found upload a video first",
+      });
   }
-  if(!videos){
+  if (!videos) {
     return response
-    .status(400)
-    .json({ status: "error", message: "something went wrong please try again" });
+      .status(400)
+      .json({
+        status: "error",
+        message: "something went wrong please try again",
+      });
   }
 
   return response.status(200).json({ status: "success", videos });
@@ -247,25 +253,38 @@ const uploadVideos = async (request, response, next) => {
   //let's create the file upload destination
   const uploadPath = path.join(__dirname, "..", "/videos/ziggy/", fileName);
   //let's save the file to the destination
-  const save = video.mv(uploadPath,async (error) => {
+  const save = video.mv(uploadPath, async (error) => {
     if (error) {
-      return response
-        .status(400)
-        .json({
-          status: "error",
-          message: "cannot upload the video",
-          log: error,
-        });
-    }
-    else{
-      const up = await videosModel.create({name:fileName,videoPath:uploadPath});
-      if(!up){
-        return response.status(400).json({status:"error",message:"cannot upload the video successfully to the database"});
+      return response.status(400).json({
+        status: "error",
+        message: "cannot upload the video",
+        log: error,
+      });
+    } else {
+      const up = await videosModel.create({
+        name: fileName,
+        videoPath: uploadPath,
+      });
+      if (!up) {
+        return response
+          .status(400)
+          .json({
+            status: "error",
+            message: "cannot upload the video successfully to the database",
+          });
       }
-      return response.status(200).json({status:"success",message:"video uploaded successfully"});
+      return response
+        .status(200)
+        .json({ status: "success", message: "video uploaded successfully" });
     }
   });
 };
 
 //let's export out endpoints
-module.exports = { downloadVideo, compressVideo, youtubeDownloader,uploadVideos,getAllvideos };
+module.exports = {
+  downloadVideo,
+  compressVideo,
+  youtubeDownloader,
+  uploadVideos,
+  getAllvideos,
+};
