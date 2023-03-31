@@ -41,7 +41,7 @@ export const VideoPlayer = (props) => {
                 <source
                   key={index}
                   src={`http://127.0.0.1:8000/${value.name}`}
-                  type="video/mp4"
+              
                 />
                  
               </video><br/>

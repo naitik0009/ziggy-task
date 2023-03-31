@@ -8,7 +8,7 @@ export const UploadViode = () => {
     formData.append("video", file);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/v2/compress",
+        "http://127.0.0.1:8000/api/v2/ziggy/upload",
         formData
       );
       if (response.data.status === "success") {
